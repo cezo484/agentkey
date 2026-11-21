@@ -79,7 +79,7 @@ test("funded flow: grant, run the three tasks, revoke", async ({ page }) => {
   // Funded: run the full flow.
   await page.getByTestId("fund-continue").click();
   await expect(page.getByTestId("policy-form")).toBeVisible();
-  await page.getByTestId("policy-cap").fill("0.05");
+  await page.getByTestId("policy-cap").fill("0.5");
   await page.getByTestId("policy-expiry").fill("24");
   await page.getByTestId("policy-save").click();
 

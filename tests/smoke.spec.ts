@@ -101,7 +101,7 @@ test.describe.serial("AgentKey smoke flow (demo mode, no funds)", () => {
   });
 
   test("6. A valid policy saves and shows a plain-English summary", async () => {
-    await page.getByTestId("policy-cap").fill("0.05");
+    await page.getByTestId("policy-cap").fill("0.5");
     await page.getByTestId("policy-expiry").fill("24");
     // The demo recipient is pre-listed.
     await expect(page.getByTestId("allow-list")).toContainText("0xaa6A");
@@ -123,7 +123,7 @@ test.describe.serial("AgentKey smoke flow (demo mode, no funds)", () => {
     const summary = await page
       .getByTestId("grant-policy-summary")
       .textContent();
-    expect(summary).toContain("0.05 CELO");
+    expect(summary).toContain("0.5 CELO");
     expect(summary).toContain("24");
   });
 

@@ -72,7 +72,7 @@ export interface AppState {
 export const STORAGE_KEY = "agentkey:v1";
 
 export const DEFAULT_POLICY: Policy = {
-  capCelo: "0.05",
+  capCelo: "0.5",
   allowed: [],
   expiryHours: 24,
 };

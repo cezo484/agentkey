@@ -16,7 +16,7 @@ export function PolicyForm({
   initial: Policy | null;
   onSave: (policy: Policy) => void;
 }) {
-  const [cap, setCap] = useState(initial?.capCelo ?? "0.05");
+  const [cap, setCap] = useState(initial?.capCelo ?? "0.5");
   const [allowed, setAllowed] = useState<Address[]>(
     initial?.allowed?.length ? initial.allowed : [DEMO_RECIPIENT],
   );
@@ -37,7 +37,7 @@ export function PolicyForm({
   const validate = (): boolean => {
     const next: typeof errors = {};
     if (!cap.trim() || Number.isNaN(capNum)) {
-      next.cap = "Enter a number, for example 0.05.";
+      next.cap = "Enter a number, for example 0.5.";
     } else if (capNum < MIN_CAP) {
       next.cap = `The cap must be at least ${MIN_CAP} CELO so the demo tasks can run.`;
     } else if (capNum > MAX_CAP) {

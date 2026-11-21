@@ -47,7 +47,7 @@ Open http://localhost:5173. The app needs no backend and no API key.
 2. Copy the wallet address, open the faucet link, and send it 2 test CELO
    (two faucet requests, 1 CELO each).
 3. Press Check balance, then continue.
-4. Keep the default policy (0.05 CELO per day, demo recipient allowed,
+4. Keep the default policy (0.5 CELO per day, demo recipient allowed,
    24 hours) or change it, then save.
 5. Grant the session key. Note the transaction hash and the Keystore status.
 6. Run all three agent tasks and watch the policy stop the two bad ones.
