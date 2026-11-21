@@ -12,7 +12,7 @@
 import { expect, test } from "@playwright/test";
 import { privateKeyToAccount } from "viem/accounts";
 
-const MIN_BALANCE = 2.0;
+const MIN_BALANCE = 1.6;
 
 test("funded flow: grant, run the three tasks, revoke", async ({ page }) => {
   test.setTimeout(15 * 60_000);

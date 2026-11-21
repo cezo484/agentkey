@@ -114,7 +114,7 @@ export function Fund({
       <InfoBox>
         In the faucet, paste the wallet address above, complete the check, and
         submit. It sends 1 test CELO per request, and the demo needs about
-        2 CELO, so request twice. Then come back here and press Check balance.
+        1.6 CELO, so request twice. Then come back here and press Check balance.
       </InfoBox>
 
       {error ? <ErrorBox message={error} /> : null}
