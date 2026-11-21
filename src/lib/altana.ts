@@ -26,20 +26,20 @@ export const DEMO_RECIPIENT: Address =
 // Measured 21 Nov 2026: a clean run costs ~1.18 CELO; 1.6 leaves margin.
 export const MIN_BALANCE_CELO = "1.6";
 
-// The Altana client. agentIdentity stays ON (the default) so each new wallet
-// gets a free ERC-8004 agent identity after its first on-chain action. The
-// record is customized for AgentKey; passing a record keeps it enabled.
+// The Altana client. agentIdentity is OFF: the SDK's automatic ERC-8004
+// registration runs a second relay wait after the grant, and that wait
+// never settles in sandboxed browsers (both the grant and the identity tx
+// land on-chain, but grantSession never returns, so the UI hangs with no
+// error). The feature is optional per the SDK docs and one line re-enables
+// it; the Dashboard still offers a manual identity registration. The core
+// demo (grant, tasks, revoke) does not need it.
 let cachedClient: Client | null = null;
 
 export function getClient(): Client {
   if (!cachedClient) {
     cachedClient = createClient({
       chains: [CELO_SEPOLIA],
-      agentIdentity: {
-        name: "AgentKey Agent",
-        description:
-          "A smart agentic wallet on Celo Sepolia. Its keys and permissions are public in the Altana KeyStore.",
-      },
+      agentIdentity: false,
     });
   }
   return cachedClient;
