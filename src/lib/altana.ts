@@ -23,7 +23,7 @@ export const DEMO_RECIPIENT: Address =
   "0xaa6A5B2704aC6A92efeEA262326e2ED3CA5E3640";
 
 // Rough budget for the full demo flow (activation + grant + tasks + revoke).
-export const MIN_BALANCE_CELO = "0.6";
+export const MIN_BALANCE_CELO = "2.0";
 
 // The Altana client. agentIdentity stays ON (the default) so each new wallet
 // gets a free ERC-8004 agent identity after its first on-chain action. The

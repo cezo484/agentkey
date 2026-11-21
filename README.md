@@ -19,7 +19,7 @@ Live demo: https://agentkey-kappa.vercel.app
 1. **Create a wallet.** Use a passkey on your device, or a demo key generated
    in your browser (testnet only, stored in localStorage, never leaves the
    browser).
-2. **Fund it.** Get free test CELO from the Celo Sepolia faucet. About 0.6
+2. **Fund it.** Get free test CELO from the Celo Sepolia faucet. About 2
    CELO covers the full demo.
 3. **Set the policy.** Daily spend cap, allowed contracts, expiry.
 4. **Grant a session key.** The key and its rules are written to the Altana
@@ -44,7 +44,8 @@ Open http://localhost:5173. The app needs no backend and no API key.
 ## Demo flow
 
 1. Press Start, then create a demo wallet.
-2. Copy the wallet address, open the faucet link, and send it 1 test CELO.
+2. Copy the wallet address, open the faucet link, and send it 2 test CELO
+   (two faucet requests, 1 CELO each).
 3. Press Check balance, then continue.
 4. Keep the default policy (0.05 CELO per day, demo recipient allowed,
    24 hours) or change it, then save.
@@ -63,7 +64,7 @@ npm run test:funded  # full on-chain flow; skips cleanly without test CELO
 The smoke suite covers landing, wallet creation, funding UI, policy
 validation, the unfunded grant error, dashboard and revoke states, and reset.
 The funded suite runs the grant, the three agent tasks, and the revoke when
-the wallet holds at least 0.6 test CELO. To run it funded, set
+the wallet holds at least 2 test CELO. To run it funded, set
 `AGENTKEY_TEST_ADMIN_KEY` to the private key of a funded demo wallet (testnet
 only, never a real key).
 

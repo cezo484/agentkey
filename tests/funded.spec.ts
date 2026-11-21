@@ -1,10 +1,10 @@
 // AgentKey funded flow test: the full on-chain demo end to end.
 // BLOCKED on the faucet (a human step): this test skips cleanly when the
-// wallet holds less than 0.6 test CELO.
+// wallet holds less than 2 test CELO.
 //
 // Two ways to run it funded:
 // 1. Set AGENTKEY_TEST_ADMIN_KEY to the private key of a demo wallet that
-//    already holds at least 0.6 test CELO on Celo Sepolia. The key is read
+//    already holds at least 2 test CELO on Celo Sepolia. The key is read
 //    from the environment only and is never written to the repo.
 // 2. Run it unfunded, read the fresh wallet address from the skip message,
 //    fund it at https://faucet.celo.org/celo-sepolia, then re-run with the
@@ -12,7 +12,7 @@
 import { expect, test } from "@playwright/test";
 import { privateKeyToAccount } from "viem/accounts";
 
-const MIN_BALANCE = 0.6;
+const MIN_BALANCE = 2.0;
 
 test("funded flow: grant, run the three tasks, revoke", async ({ page }) => {
   test.setTimeout(15 * 60_000);
