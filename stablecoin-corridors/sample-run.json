@@ -1,0 +1,105 @@
+{
+  "agent": "CorridorDesk",
+  "erc8004AgentId": 10110,
+  "attributionTag": "celo_584ed85bd399",
+  "chainId": 42220,
+  "batchTotalUsdt": 350,
+  "batchWithinCap": true,
+  "generatedAt": "2026-11-25T19:02:55.256Z",
+  "payouts": [
+    {
+      "recipient": "Adaeze (Lagos contractor)",
+      "wallet": "0x0000000000000000000000000000000000000001",
+      "usdt": "120",
+      "token": "cNGN",
+      "quote": {
+        "buyAmount": "173276.070988",
+        "feeUsdt": "0.023995",
+        "takerPaysUsdt": "120",
+        "availableSellUsdt": "43548.375441"
+      },
+      "policyChecks": [
+        {
+          "name": "per-payment cap",
+          "ok": true,
+          "detail": "120 USDT vs cap 250"
+        },
+        {
+          "name": "corridor allowlist",
+          "ok": true,
+          "detail": "cNGN"
+        },
+        {
+          "name": "quote available",
+          "ok": true,
+          "detail": "preview"
+        }
+      ],
+      "approved": true
+    },
+    {
+      "recipient": "Bima (Jakarta freelancer)",
+      "wallet": "0x0000000000000000000000000000000000000002",
+      "usdt": "80",
+      "token": "IDRX",
+      "quote": {
+        "buyAmount": "1470240.13",
+        "feeUsdt": "0.015996",
+        "takerPaysUsdt": "80",
+        "availableSellUsdt": "318719.902925"
+      },
+      "policyChecks": [
+        {
+          "name": "per-payment cap",
+          "ok": true,
+          "detail": "80 USDT vs cap 250"
+        },
+        {
+          "name": "corridor allowlist",
+          "ok": true,
+          "detail": "IDRX"
+        },
+        {
+          "name": "quote available",
+          "ok": true,
+          "detail": "preview"
+        }
+      ],
+      "approved": true
+    },
+    {
+      "recipient": "Camila (Sao Paulo designer)",
+      "wallet": "0x0000000000000000000000000000000000000003",
+      "usdt": "150",
+      "token": "wBRL",
+      "quote": {
+        "buyAmount": "872.683607601849598045",
+        "feeUsdt": "0.029994",
+        "takerPaysUsdt": "150",
+        "availableSellUsdt": "535.408652"
+      },
+      "policyChecks": [
+        {
+          "name": "per-payment cap",
+          "ok": true,
+          "detail": "150 USDT vs cap 250"
+        },
+        {
+          "name": "corridor allowlist",
+          "ok": true,
+          "detail": "wBRL"
+        },
+        {
+          "name": "quote available",
+          "ok": true,
+          "detail": "preview"
+        }
+      ],
+      "approved": true
+    }
+  ],
+  "execution": {
+    "status": "awaiting human approval",
+    "note": "On approval, request a firm quote (POST /v2/rfq/request) with the taker wallet, append the ERC-8021 tag celo_584ed85bd399 to transactions.swap.data, approve takerPays to the Textile LimitOrderReactor, then sign and broadcast from the taker wallet. This demo does not sign."
+  }
+}

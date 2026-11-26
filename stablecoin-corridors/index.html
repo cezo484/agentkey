@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CorridorDesk — payroll payouts in local stablecoins</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 760px; padding: 0 1rem; background: #0b0f14; color: #e6edf3; }
+  h1 { font-size: 1.4rem; }
+  .sub { color: #9fb0c3; margin-top: -0.5rem; }
+  label { display: block; margin: 1rem 0 0.25rem; font-size: 0.85rem; color: #9fb0c3; }
+  input, select { width: 100%; padding: 0.55rem; border-radius: 8px; border: 1px solid #2a3644; background: #121a24; color: #e6edf3; box-sizing: border-box; }
+  button { margin-top: 1rem; padding: 0.6rem 1.2rem; border: 0; border-radius: 8px; background: #35d07f; color: #06281a; font-weight: 600; cursor: pointer; }
+  button:disabled { background: #2a3644; color: #9fb0c3; cursor: default; }
+  .card { border: 1px solid #2a3644; border-radius: 12px; padding: 1rem; margin-top: 1rem; background: #121a24; }
+  .ok { color: #35d07f; } .bad { color: #ff7b72; }
+  code { background: #1b2634; padding: 0.1rem 0.3rem; border-radius: 4px; }
+  pre { white-space: pre-wrap; word-break: break-all; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<h1>CorridorDesk</h1>
+<p class="sub">Payroll agent on Celo: USD₮ in, local stablecoins out, converted on Textile FX under an AgentKey policy. ERC-8004 agent #10110.</p>
+
+<label>Recipient wallet</label>
+<input id="wallet" value="0x0000000000000000000000000000000000000001">
+<label>Amount (USD₮)</label>
+<input id="amount" type="number" value="120" min="1">
+<label>Pay in</label>
+<select id="token">
+  <option>cNGN</option><option>IDRX</option><option>wARS</option>
+  <option>wBRL</option><option>wMXN</option><option>wCOP</option>
+</select>
+<button id="quoteBtn">Get Textile FX quote</button>
+
+<div id="result"></div>
+
+<script>
+const TOKENS = {
+  USDT: { address: '0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e', decimals: 6 },
+  cNGN: { address: '0xF6829D7393dAe24509eb1E52eE8e572e2E271a4f', decimals: 6 },
+  IDRX: { address: '0x18Bc5bcC660cf2B9cE3cd51a404aFe1a0cBD3C22', decimals: 2 },
+  wARS: { address: '0x0DC4F92879B7670e5f4e4e6e3c801D229129D90D', decimals: 18 },
+  wBRL: { address: '0xD76f5Faf6888e24D9F04Bf92a0c8B921FE4390e0', decimals: 18 },
+  wMXN: { address: '0x337E7456B420bD3481e7FA61fA9850343d610d34', decimals: 18 },
+  wCOP: { address: '0x8a1D45e102e886510e891d2Ec656a708991e2D76', decimals: 18 },
+};
+const PER_PAYMENT_CAP = 250;
+
+function toAtomic(amount, decimals) {
+  const [whole, frac = ''] = String(amount).split('.');
+  return (BigInt(whole) * 10n ** BigInt(decimals) + BigInt((frac + '0'.repeat(decimals)).slice(0, decimals) || '0')).toString();
+}
+function fromAtomic(atomic, decimals) {
+  const v = BigInt(atomic), base = 10n ** BigInt(decimals);
+  const frac = (v % base).toString().padStart(decimals, '0').replace(/0+$/, '');
+  return frac ? `${v / base}.${frac}` : (v / base).toString();
+}
+
+document.getElementById('quoteBtn').addEventListener('click', async () => {
+  const out = document.getElementById('result');
+  const amount = document.getElementById('amount').value;
+  const token = document.getElementById('token').value;
+  const wallet = document.getElementById('wallet').value;
+  out.innerHTML = '<div class="card">Asking Textile FX makers…</div>';
+  try {
+    const res = await fetch('https://api.textilecredit.com/v2/rfq/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chainId: 42220,
+        sellToken: TOKENS.USDT.address,
+        buyToken: TOKENS[token].address,
+        sellAmount: toAtomic(amount, 6),
+      }),
+    });
+    const { data } = await res.json();
+    if (data.status !== 'preview') {
+      out.innerHTML = `<div class="card"><span class="bad">No quote</span> for this size right now.</div>`;
+      return;
+    }
+    const withinCap = Number(amount) <= PER_PAYMENT_CAP;
+    out.innerHTML = `
+      <div class="card">
+        <p><strong>${amount} USD₮ → ${fromAtomic(data.buyAmount, TOKENS[token].decimals)} ${token}</strong></p>
+        <p>Fee: ${fromAtomic(data.feeAmount, 6)} USD₮ · You pay: ${fromAtomic(data.takerPays, 6)} USD₮</p>
+        <p>Policy: per-payment cap ${PER_PAYMENT_CAP} USD₮ — <span class="${withinCap ? 'ok' : 'bad'}">${withinCap ? 'within cap' : 'over cap, blocked'}</span></p>
+        <p>Recipient: <code>${wallet}</code></p>
+        <button ${withinCap ? '' : 'disabled'} id="approveBtn">Approve payout</button>
+        <div id="plan"></div>
+      </div>`;
+    const approve = document.getElementById('approveBtn');
+    if (approve) approve.addEventListener('click', () => {
+      document.getElementById('plan').innerHTML = `
+        <p class="ok">Approved. Unsigned execution plan prepared:</p>
+        <pre>1. POST /v2/rfq/request (firm quote, taker = payer wallet)
+2. Append ERC-8021 tag celo_584ed85bd399 to transactions.swap.data
+3. Approve takerPays to LimitOrderReactor 0xa9AA0a64769cBed4d3B1Ceb4Df01CdE915C235b3
+4. Sign + broadcast swap from the taker wallet (wallet signature required)
+5. Transfer ${fromAtomic(data.buyAmount, TOKENS[token].decimals)} ${token} to ${wallet}</pre>
+        <p>Demo stops here: signing happens in the payer's wallet, never in this page.</p>`;
+    });
+  } catch (err) {
+    out.innerHTML = `<div class="card"><span class="bad">Quote failed:</span> ${err.message}. If the browser blocks the cross-origin call, run the CLI instead: <code>node agent.mjs</code></div>`;
+  }
+});
+</script>
+</body>
+</html>
