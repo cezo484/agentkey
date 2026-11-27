@@ -6,6 +6,11 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 
 test.describe.serial("AgentKey smoke flow (demo mode, no funds)", () => {
+  test.skip(
+    process.env.AGENTKEY_NETWORK_TESTS !== "1",
+    "Network smoke tests are opt-in. Set AGENTKEY_NETWORK_TESTS=1 to run them.",
+  );
+
   let context: BrowserContext;
   let page: Page;
 

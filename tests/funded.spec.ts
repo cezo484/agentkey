@@ -21,6 +21,14 @@ test("funded flow: grant, run the three tasks, revoke", async ({ page }) => {
     | `0x${string}`
     | undefined;
 
+  if (!fundedKey && process.env.AGENTKEY_NETWORK_TESTS !== "1") {
+    test.skip(
+      true,
+      "Funded network test is opt-in. Set AGENTKEY_NETWORK_TESTS=1 or AGENTKEY_TEST_ADMIN_KEY to run it.",
+    );
+    return;
+  }
+
   if (fundedKey) {
     // Seed the app with the funded demo wallet before it loads.
     const account = privateKeyToAccount(fundedKey);

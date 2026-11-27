@@ -57,16 +57,18 @@ Open http://localhost:5173. The app needs no backend and no API key.
 ## Tests
 
 ```bash
-npm test          # smoke tests: full UI flow in demo mode, no funds needed
+npm test             # offline UI/policy tests; no network or secrets needed
+npm run test:network # network smoke + funded flow; needs Celo Sepolia access
 npm run test:funded  # full on-chain flow; skips cleanly without test CELO
 ```
 
-The smoke suite covers landing, wallet creation, funding UI, policy
-validation, the unfunded grant error, dashboard and revoke states, and reset.
-The funded suite runs the grant, the three agent tasks, and the revoke when
-the wallet holds at least 2 test CELO. To run it funded, set
-`AGENTKEY_TEST_ADMIN_KEY` to the private key of a funded demo wallet (testnet
-only, never a real key).
+The default suite runs offline: it seeds localStorage, blocks non-local
+requests, and covers landing, locked steps, policy validation, dashboard
+state, and reset. The network smoke suite covers wallet creation, funding UI,
+the unfunded grant error, dashboard and revoke states, and reset. The funded
+suite runs the grant, the three agent tasks, and the revoke when the wallet
+holds at least 2 test CELO. To run it funded, set `AGENTKEY_TEST_ADMIN_KEY` to
+the private key of a funded demo wallet (testnet only, never a real key).
 
 Test sandbox note: in this VM the browser cannot tunnel through the egress
 proxy on its own, so the test run starts a small local forward proxy
